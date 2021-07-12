@@ -44,11 +44,13 @@ class Rental {
 
 class Bill extends Rental {
   Rental rental;
+  int electricityCharges;
   DateTime billDate;
   int total;
 
   Bill({
     required this.rental,
+    required this.electricityCharges,
     required this.billDate,
     required this.total,
   }) : super(
@@ -70,6 +72,7 @@ class Bill extends Rental {
       'maintenance': maintenance,
       'tenantName': tenantName,
       'advancePaid': advancePaid,
+      'electricityCharges': electricityCharges,
       'billDate': billDate,
       'total': total,
     };
@@ -78,7 +81,10 @@ class Bill extends Rental {
   static getbill(Map data) {
     return Bill(
       rental: Rental.getRental(data),
-      billDate: data['billDate'],
+      electricityCharges: data['electricityCharges'],
+      billDate: (data['billDate'].runtimeType == DateTime)
+          ? data['billDate']
+          : data['billDate'].toDate(),
       total: data['total'],
     );
   }

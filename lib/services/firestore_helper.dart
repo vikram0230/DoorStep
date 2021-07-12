@@ -70,8 +70,8 @@ class FirestoreHelper {
   // Bill Related
 
   generateBill(Bill bill) async {
+    
     //TODO: Check if bill already exists
-
     if (true) {
       return rentalsCollection
           .doc(rentalDocId)

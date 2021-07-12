@@ -71,7 +71,7 @@ class _RentalDetailState extends State<RentalDetail> {
             ),
             leading: IconButton(
               icon: Icon(
-                Icons.close,
+                Icons.arrow_back_ios,
                 color: kAccentColor,
               ),
               onPressed: () {
@@ -462,6 +462,7 @@ class _RentalDetailState extends State<RentalDetail> {
                       Map data = widget.rental!.getMap();
                       Map<String, dynamic> temp = {
                         'billDate': DateTime.now(),
+                        'electricityCharges': (int.parse(meterReadingController.text) - widget.rental!.meterReading) * 7,
                         'total': getTotal(
                           int.parse(meterReadingController.text),
                         ),
@@ -470,6 +471,7 @@ class _RentalDetailState extends State<RentalDetail> {
                       print(data);
                       Bill bill = Bill.getbill(data);
                       firestoreHelper.generateBill(bill);
+                      Navigator.pop(context);
                     } else {
                       setState(() {
                         error = true;

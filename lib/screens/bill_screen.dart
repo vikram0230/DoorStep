@@ -3,7 +3,10 @@ import 'package:doorstep/services/firestore_helper.dart';
 import 'package:doorstep/utilities/classes.dart';
 import 'package:doorstep/utilities/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
+
+import 'bill_detail.dart';
 
 class BillScreen extends StatefulWidget {
   static String route = '/bill';
@@ -33,7 +36,7 @@ class _BillScreenState extends State<BillScreen> {
         backgroundColor: kPrimaryColor,
         centerTitle: true,
         title: Text(
-          'Rental Details',
+          'Bills',
           style: TextStyle(color: kAccentColor),
         ),
         leading: IconButton(
@@ -47,7 +50,7 @@ class _BillScreenState extends State<BillScreen> {
         ),
       ),
       body: StreamBuilder<QuerySnapshot<Bill>>(
-        stream: firestoreHelper.rentalsCollection.withConverter<Bill>(
+        stream: firestoreHelper.billsCollection.withConverter<Bill>(
           toFirestore: (bill, SetOptions? options) {
             return bill.getMap();
           },
@@ -76,32 +79,35 @@ class _BillScreenState extends State<BillScreen> {
                   String billId = snapshotData[index].id;
                   // print(billId);
 
-                  return Container();
-                  // return ListTile(
-                  //   tileColor: kAccentColor,
-                  //   leading: Icon(
-                  //     Icons.house_siding_rounded,
-                  //     color: kPrimaryColor,
-                  //     size: 40,
-                  //   ),
-                  //   title: Text(
-                  //     rental.rentalName,
-                  //     style: TextStyle(color: kPrimaryColor),
-                  //   ),
-                  //   subtitle: Text(
-                  //     rental.tenantName ?? 'UnOccupied',
-                  //     style: TextStyle(color: kPrimaryColor),
-                  //   ),
-                  //   onTap: () {
-                  //     Navigator.push(
-                  //         context,
-                  //         MaterialPageRoute(
-                  //             builder: (context) => RentalDetail(
-                  //                   rental: rental,
-                  //                   rentalId: rentalId,
-                  //                 )));
-                  //   },
-                  // );
+                  // return Container();
+                  return ListTile(
+                    tileColor: kAccentColor,
+                    leading: Icon(
+                      Icons.receipt,
+                      color: kPrimaryColor,
+                      size: 40,
+                    ),
+                    title: Text(
+                      bill.tenantName ?? 'UnOccupied',
+                      style: TextStyle(color: kPrimaryColor),
+                    ),
+                    subtitle: Text(
+                      DateFormat.yMMMMd().format(bill.billDate),
+                      style: TextStyle(color: kPrimaryColor),
+                    ),
+                    trailing: Text(
+                      '₹' + bill.total.toString(),
+                      style: TextStyle(color: kPrimaryColor, fontSize: 18),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => BillDetail(
+                                    billId: billId,
+                                  )));
+                    },
+                  );
                 },
                 separatorBuilder: (BuildContext context, int index) {
                   return SizedBox(height: 10);

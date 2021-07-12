@@ -1,5 +1,6 @@
 import 'package:doorstep/screens/home_screen.dart';
 import 'package:doorstep/screens/rental_detail.dart';
+import 'package:doorstep/utilities/constants.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,6 +26,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       initialRoute: HomeScreen.route,
+      theme: ThemeData(accentColor: kAccentColor),
       routes: {
         HomeScreen.route: (context) => HomeScreen(),
         RentalDetail.route: (context) => RentalDetail(),
@@ -32,4 +34,3 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-
