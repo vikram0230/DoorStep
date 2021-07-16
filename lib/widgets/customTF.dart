@@ -3,19 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class CustomTextField extends StatelessWidget {
-  final String labelText;
+  final String? labelText;
   final TextEditingController controller;
   final Icon? prefixIcon;
+  final Widget? prefix;
+  final Widget? suffix;
   final List<TextInputFormatter>? inputFormatter;
   final bool? enabled;
   final String? errorText;
 
   CustomTextField({
-    required this.labelText,
+    this.labelText,
     required this.controller,
     this.prefixIcon,
     this.inputFormatter,
-    this.enabled, this.errorText,
+    this.enabled,
+    this.errorText,
+    this.prefix, this.suffix,
   });
 
   @override
@@ -29,7 +33,9 @@ class CustomTextField extends StatelessWidget {
         inputFormatters:
             inputFormatter ?? [FilteringTextInputFormatter.singleLineFormatter],
         decoration: InputDecoration(
+          prefix: prefix,
           prefixIcon: prefixIcon,
+          suffix: suffix,
           labelText: labelText,
           labelStyle: TextStyle(color: kAccentColor.withOpacity(0.5)),
           errorText: errorText,
@@ -43,9 +49,11 @@ class CustomTextField extends StatelessWidget {
           enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(color: kAccentColor),
           ),
-          errorBorder: errorText==null? UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.red),
-          ) : null,
+          errorBorder: errorText == null
+              ? UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.red),
+                )
+              : null,
         ),
       ),
     );

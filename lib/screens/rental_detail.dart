@@ -81,6 +81,22 @@ class _RentalDetailState extends State<RentalDetail> {
             actions: editable
                 ? []
                 : [
+                    IconButton(
+                      icon: Icon(
+                        Icons.receipt,
+                        color: kAccentColor,
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BillScreen(
+                              rentalId: widget.rentalId!,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                     PopupMenuButton(
                       icon: Icon(
                         Icons.adaptive.more,
@@ -88,16 +104,6 @@ class _RentalDetailState extends State<RentalDetail> {
                       ),
                       onSelected: (value) {
                         switch (value) {
-                          case 'View Bills':
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => BillScreen(
-                                  rentalId: widget.rentalId!,
-                                ),
-                              ),
-                            );
-                            break;
                           case 'Edit':
                             setState(() {
                               editable = true;
@@ -111,10 +117,6 @@ class _RentalDetailState extends State<RentalDetail> {
                       color: kPrimaryColor,
                       itemBuilder: (context) {
                         return [
-                          PopupMenuItem(
-                            child: Text('View Bills'),
-                            value: 'View Bills',
-                          ),
                           PopupMenuItem(
                             child: Text('Edit'),
                             value: 'Edit',
@@ -391,6 +393,7 @@ class _RentalDetailState extends State<RentalDetail> {
                     if (rentalNameController.text ==
                         widget.rental!.rentalName) {
                       firestoreHelper.deleteRental();
+                      //TODO: Toast
                       Navigator.pop(context);
                       Navigator.pop(context);
                     } else {
@@ -455,14 +458,18 @@ class _RentalDetailState extends State<RentalDetail> {
                   child: Text('Cancel'),
                 ),
                 MaterialButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (meterReadingController.text != '' &&
                         int.parse(meterReadingController.text) >=
                             previousReading) {
                       Map data = widget.rental!.getMap();
                       Map<String, dynamic> temp = {
                         'billDate': DateTime.now(),
-                        'electricityCharges': (int.parse(meterReadingController.text) - widget.rental!.meterReading) * 7,
+                        'meterReading': int.parse(meterReadingController.text),
+                        'electricityCharges':
+                            (int.parse(meterReadingController.text) -
+                                    widget.rental!.meterReading) *
+                                7,
                         'total': getTotal(
                           int.parse(meterReadingController.text),
                         ),
@@ -470,8 +477,15 @@ class _RentalDetailState extends State<RentalDetail> {
                       data.addAll(temp);
                       print(data);
                       Bill bill = Bill.getbill(data);
-                      firestoreHelper.generateBill(bill);
+                      bool result = await firestoreHelper.generateBill(bill);
+                      Rental rental = widget.rental!;
+                      rental.meterReading =
+                          int.parse(meterReadingController.text);
+                      bool res = await firestoreHelper.updateRental(rental);
                       Navigator.pop(context);
+                      if (result && res) {
+                        //TODO: Toast
+                      } else {}
                     } else {
                       setState(() {
                         error = true;

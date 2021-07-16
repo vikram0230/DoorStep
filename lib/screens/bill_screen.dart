@@ -29,111 +29,114 @@ class _BillScreenState extends State<BillScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: kPrimaryColor,
-      appBar: AppBar(
-        elevation: 0,
+    return SafeArea(
+          child: Scaffold(
         backgroundColor: kPrimaryColor,
-        centerTitle: true,
-        title: Text(
-          'Bills',
-          style: TextStyle(color: kAccentColor),
-        ),
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: kAccentColor,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: kPrimaryColor,
+          centerTitle: true,
+          title: Text(
+            'Bills',
+            style: TextStyle(color: kAccentColor),
           ),
-          onPressed: () {
-            Navigator.pop(context);
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: kAccentColor,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+        body: StreamBuilder<QuerySnapshot<Bill>>(
+          stream: firestoreHelper.billsCollection.withConverter<Bill>(
+            toFirestore: (bill, SetOptions? options) {
+              return bill.getMap();
+            },
+            fromFirestore: (
+              DocumentSnapshot<Map<String, dynamic>> snapshot,
+              SnapshotOptions? options,
+            ) {
+              var data = snapshot.data()!;
+              return Bill.getbill(data);
+            },
+          ).snapshots(),
+          builder: (context, snapshot) {
+            // print('--Bill Screen--');
+            // print(snapshot.hasData);
+            // print(snapshot.hasError);
+            List<QueryDocumentSnapshot<Bill>>? snapshotData;
+            if (snapshot.connectionState != ConnectionState.waiting) {
+              if (snapshot.hasData) {
+                snapshotData = snapshot.data!.docs;
+                return ListView.separated(
+                  padding: EdgeInsets.all(10),
+                  itemCount: snapshotData.length,
+                  itemBuilder: (context, index) {
+                    Bill bill = snapshotData![index].data();
+                    // print(bill.getMap());
+                    String billId = snapshotData[index].id;
+                    // print(billId);
+
+                    // return Container();
+                    return ListTile(
+                      tileColor: kAccentColor,
+                      leading: Icon(
+                        Icons.receipt,
+                        color: kPrimaryColor,
+                        size: 40,
+                      ),
+                      title: Text(
+                        bill.tenantName ?? 'UnOccupied',
+                        style: TextStyle(color: kPrimaryColor),
+                      ),
+                      subtitle: Text(
+                        DateFormat.yMMMMd().format(bill.billDate),
+                        style: TextStyle(color: kPrimaryColor),
+                      ),
+                      trailing: Text(
+                        '₹' + bill.total.toString(),
+                        style: TextStyle(color: kPrimaryColor, fontSize: 18),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BillDetail(
+                                      bill: bill,
+                                      billId: billId,
+                                    )));
+                      },
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return SizedBox(height: 10);
+                  },
+                );
+              }
+              if (snapshot.hasError) {
+                return Center(
+                  child: Lottie.network(
+                    'https://assets10.lottiefiles.com/packages/lf20_pNx6yH.json',
+                    repeat: true,
+                    reverse: true,
+                    animate: true,
+                  ),
+                );
+              }
+            }
+            return Center(
+              child: Lottie.network(
+                'https://assets2.lottiefiles.com/packages/lf20_fp7svyno.json',
+                repeat: true,
+                reverse: true,
+                animate: true,
+              ),
+            );
           },
         ),
-      ),
-      body: StreamBuilder<QuerySnapshot<Bill>>(
-        stream: firestoreHelper.billsCollection.withConverter<Bill>(
-          toFirestore: (bill, SetOptions? options) {
-            return bill.getMap();
-          },
-          fromFirestore: (
-            DocumentSnapshot<Map<String, dynamic>> snapshot,
-            SnapshotOptions? options,
-          ) {
-            var data = snapshot.data()!;
-            return Bill.getbill(data);
-          },
-        ).snapshots(),
-        builder: (context, snapshot) {
-          // print('--Bill Screen--');
-          // print(snapshot.hasData);
-          // print(snapshot.hasError);
-          List<QueryDocumentSnapshot<Bill>>? snapshotData;
-          if (snapshot.connectionState != ConnectionState.waiting) {
-            if (snapshot.hasData) {
-              snapshotData = snapshot.data!.docs;
-              return ListView.separated(
-                padding: EdgeInsets.all(10),
-                itemCount: snapshotData.length,
-                itemBuilder: (context, index) {
-                  Bill bill = snapshotData![index].data();
-                  // print(bill.getMap());
-                  String billId = snapshotData[index].id;
-                  // print(billId);
-
-                  // return Container();
-                  return ListTile(
-                    tileColor: kAccentColor,
-                    leading: Icon(
-                      Icons.receipt,
-                      color: kPrimaryColor,
-                      size: 40,
-                    ),
-                    title: Text(
-                      bill.tenantName ?? 'UnOccupied',
-                      style: TextStyle(color: kPrimaryColor),
-                    ),
-                    subtitle: Text(
-                      DateFormat.yMMMMd().format(bill.billDate),
-                      style: TextStyle(color: kPrimaryColor),
-                    ),
-                    trailing: Text(
-                      '₹' + bill.total.toString(),
-                      style: TextStyle(color: kPrimaryColor, fontSize: 18),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => BillDetail(
-                                    billId: billId,
-                                  )));
-                    },
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return SizedBox(height: 10);
-                },
-              );
-            }
-            if (snapshot.hasError) {
-              return Center(
-                child: Lottie.network(
-                  'https://assets10.lottiefiles.com/packages/lf20_pNx6yH.json',
-                  repeat: true,
-                  reverse: true,
-                  animate: true,
-                ),
-              );
-            }
-          }
-          return Center(
-            child: Lottie.network(
-              'https://assets2.lottiefiles.com/packages/lf20_fp7svyno.json',
-              repeat: true,
-              reverse: true,
-              animate: true,
-            ),
-          );
-        },
       ),
     );
   }
