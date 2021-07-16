@@ -12,7 +12,8 @@ class FirestoreHelper {
 
   FirestoreHelper({rentalId, billId}) {
     rentalsCollection = firestore.collection(kRentals);
-    billsCollection = firestore.collection(kRentals).doc(rentalId).collection(kBills);
+    billsCollection =
+        firestore.collection(kRentals).doc(rentalId).collection(kBills);
     rentalDocId = rentalId;
     billDocId = billId;
   }
@@ -70,9 +71,17 @@ class FirestoreHelper {
   // Bill Related
 
   Future<bool> generateBill(Bill bill) async {
-    
+    DateTime now = DateTime.now();
+    DateTime firstOfMonth = DateTime(now.year, now.month, 1);
+    print(firstOfMonth);
+
+    QuerySnapshot document = await billsCollection
+        .where('billDate', isGreaterThanOrEqualTo: firstOfMonth)
+        .get();
+    print(document.docs);
+
     //TODO: Check if bill already exists
-    if (true) {
+    if (document.docs.isEmpty) {
       return rentalsCollection
           .doc(rentalDocId)
           .collection(kBills)
@@ -82,10 +91,12 @@ class FirestoreHelper {
         print(error);
       });
     } else {
+      print(document.docs[0].data());
+      String docId = document.docs[0].id;
       return rentalsCollection
           .doc(rentalDocId)
           .collection(kBills)
-          .doc(billDocId)
+          .doc(docId)
           .update(bill.getMap())
           .then((value) => true)
           .catchError((error) {
