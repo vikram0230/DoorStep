@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doorstep/screens/bill_screen.dart';
 import 'package:doorstep/services/firestore_helper.dart';
 import 'package:doorstep/utilities/classes.dart';
@@ -426,7 +425,7 @@ class _RentalDetailState extends State<RentalDetail> {
     return showDialog(
       context: context,
       builder: (context) {
-        TextEditingController meterReadingController = TextEditingController();
+        TextEditingController readingController = TextEditingController();
         return StatefulBuilder(
           builder:
               (BuildContext context, void Function(void Function()) setState) {
@@ -438,7 +437,7 @@ class _RentalDetailState extends State<RentalDetail> {
                   Text('Enter the EB meter readings'),
                   CustomTextField(
                     labelText: 'Meter Reading',
-                    controller: meterReadingController,
+                    controller: readingController,
                     errorText: error ? 'Enter correct Meter Readings' : null,
                     inputFormatter: [
                       FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
@@ -463,19 +462,20 @@ class _RentalDetailState extends State<RentalDetail> {
                     int prevReading =
                         await firestoreHelper.getPreviousReading() ??
                             lastReading;
-                    if (meterReadingController.text != '' &&
-                        int.parse(meterReadingController.text) >= prevReading) {
+                    if (readingController.text != '' &&
+                        int.parse(readingController.text) >= prevReading) {
                       Map data = widget.rental!.getMap();
 
                       Map<String, dynamic> temp = {
                         'billDate': DateTime.now(),
-                        'meterReading': int.parse(meterReadingController.text),
+                        'meterReading': int.parse(readingController.text),
+                        'electricityConsumption':
+                            int.parse(readingController.text) - prevReading,
                         'electricityCharges':
-                            (int.parse(meterReadingController.text) -
-                                    prevReading) *
+                            (int.parse(readingController.text) - prevReading) *
                                 7,
                         'total': getTotal(
-                          int.parse(meterReadingController.text),
+                          int.parse(readingController.text),
                         ),
                       };
 
@@ -485,11 +485,12 @@ class _RentalDetailState extends State<RentalDetail> {
                       bool result = await firestoreHelper.generateBill(bill);
 
                       Rental rental = widget.rental!;
-                      rental.meterReading =
-                          int.parse(meterReadingController.text);
+                      rental.meterReading = int.parse(readingController.text);
+                      meterReadingController.text = readingController.text;
 
                       bool res = await firestoreHelper.updateRental(rental);
                       Navigator.pop(context);
+                      setState(() {});
                       if (result && res) {
                         //TODO: Toast
                       } else {}

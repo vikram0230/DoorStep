@@ -19,6 +19,7 @@ class _BillDetailState extends State<BillDetail> {
   TextEditingController electricityChargesController = TextEditingController();
   TextEditingController rentController = TextEditingController();
   TextEditingController meterReadingController = TextEditingController();
+  TextEditingController consumtionController = TextEditingController();
   TextEditingController waterChargesController = TextEditingController();
   TextEditingController maintenanceController = TextEditingController();
   TextEditingController tenantNameController = TextEditingController();
@@ -32,6 +33,7 @@ class _BillDetailState extends State<BillDetail> {
         widget.bill.electricityCharges.toString();
     rentController.text = widget.bill.rent.toString();
     meterReadingController.text = widget.bill.meterReading.toString();
+    consumtionController.text = widget.bill.electricityConsumption.toString();
     electricityChargesController.text =
         widget.bill.electricityCharges.toString();
     waterChargesController.text = widget.bill.waterCharges.toString();
@@ -112,6 +114,24 @@ class _BillDetailState extends State<BillDetail> {
                   width: 290,
                   child: Text(
                     'Meter Reading: ',
+                    style: TextStyle(
+                        color: kAccentColor, fontWeight: FontWeight.w600),
+                  ),
+                ),
+                suffix: Text(
+                  'KWPH',
+                ),
+                enabled: false,
+                inputFormatter: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
+                ],
+              ),
+              CustomTextField(
+                controller: consumtionController,
+                prefix: SizedBox(
+                  width: 290,
+                  child: Text(
+                    'Electricity Consumption: ',
                     style: TextStyle(
                         color: kAccentColor, fontWeight: FontWeight.w600),
                   ),
