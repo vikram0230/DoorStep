@@ -32,7 +32,9 @@ git clone https://github.com/vikram0230/DoorStep.git
 ```
 ### Firebase setup
 
-Create a project on [Firebase](https://console.firebase.google.com/) named DoorStep and follow the [instructions](https://firebase.google.com/docs/android/setup)
+Create a project on [Firebase](https://console.firebase.google.com/) named DoorStep and follow the instructions
+- [Android](https://firebase.google.com/docs/android/setup)
+- [iOS](https://firebase.google.com/docs/ios/setup)
 
 ### Using Android Studio:
 
