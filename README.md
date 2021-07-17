@@ -1,8 +1,12 @@
 # DoorStep
 
-Rental Management System built on Flutter with Firebase. 
+### Rental Management System
 
+An open source app that manages rentals and generate monthly bills. 
+
+<p align="center">
 <img src="https://github.com/vikram0230/DoorStep/blob/master/assets/images/logo.png" height=400>
+</p>
 
 ## Getting Started
 
