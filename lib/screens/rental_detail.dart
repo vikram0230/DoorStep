@@ -389,11 +389,26 @@ class _RentalDetailState extends State<RentalDetail> {
                   child: Text('Cancel'),
                 ),
                 MaterialButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    bool res;
                     if (rentalNameController.text ==
                         widget.rental!.rentalName) {
-                      firestoreHelper.deleteRental();
-                      //TODO: Toast
+                      res = await firestoreHelper.deleteRental();
+                      if (res) {
+                        Fluttertoast.showToast(
+                          msg: 'Rental Deleted',
+                          backgroundColor: kAccentColor,
+                          textColor: kPrimaryColor,
+                          gravity: ToastGravity.BOTTOM,
+                        );
+                      } else {
+                        Fluttertoast.showToast(
+                          msg: 'Error! Rental not deleted',
+                          backgroundColor: kAccentColor,
+                          textColor: kPrimaryColor,
+                          gravity: ToastGravity.BOTTOM,
+                        );
+                      }
                       Navigator.pop(context);
                       Navigator.pop(context);
                     } else {
@@ -492,8 +507,20 @@ class _RentalDetailState extends State<RentalDetail> {
                       Navigator.pop(context);
                       setState(() {});
                       if (result && res) {
-                        //TODO: Toast
-                      } else {}
+                        Fluttertoast.showToast(
+                          msg: 'Bill Generated',
+                          backgroundColor: kAccentColor,
+                          textColor: kPrimaryColor,
+                          gravity: ToastGravity.BOTTOM,
+                        );
+                      } else {
+                        Fluttertoast.showToast(
+                          msg: 'Error! Bill not generated',
+                          backgroundColor: kAccentColor,
+                          textColor: kPrimaryColor,
+                          gravity: ToastGravity.BOTTOM,
+                        );
+                      }
                     } else {
                       setState(() {
                         error = true;
