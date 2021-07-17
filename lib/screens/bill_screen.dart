@@ -30,7 +30,7 @@ class _BillScreenState extends State<BillScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-          child: Scaffold(
+      child: Scaffold(
         backgroundColor: kPrimaryColor,
         appBar: AppBar(
           elevation: 0,
@@ -80,7 +80,6 @@ class _BillScreenState extends State<BillScreen> {
                     String billId = snapshotData[index].id;
                     // print(billId);
 
-                    // return Container();
                     return ListTile(
                       tileColor: kAccentColor,
                       leading: Icon(
@@ -102,12 +101,14 @@ class _BillScreenState extends State<BillScreen> {
                       ),
                       onTap: () {
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => BillDetail(
-                                      bill: bill,
-                                      billId: billId,
-                                    )));
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BillDetail(
+                              bill: bill,
+                              billId: billId,
+                            ),
+                          ),
+                        );
                       },
                     );
                   },

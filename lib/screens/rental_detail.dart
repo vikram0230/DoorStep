@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doorstep/screens/bill_screen.dart';
 import 'package:doorstep/services/firestore_helper.dart';
 import 'package:doorstep/utilities/classes.dart';
@@ -59,7 +60,7 @@ class _RentalDetailState extends State<RentalDetail> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: WillPopScope(
-        onWillPop: () async => false,
+        onWillPop: editable ? () async => false : () async => true,
         child: Scaffold(
           backgroundColor: kPrimaryColor,
           appBar: AppBar(
@@ -420,7 +421,7 @@ class _RentalDetailState extends State<RentalDetail> {
     return total;
   }
 
-  Future<dynamic> generateBill(BuildContext context, int previousReading) {
+  Future<dynamic> generateBill(BuildContext context, int lastReading) {
     bool error = false;
     return showDialog(
       context: context,
@@ -459,28 +460,34 @@ class _RentalDetailState extends State<RentalDetail> {
                 ),
                 MaterialButton(
                   onPressed: () async {
+                    int prevReading =
+                        await firestoreHelper.getPreviousReading() ??
+                            lastReading;
                     if (meterReadingController.text != '' &&
-                        int.parse(meterReadingController.text) >=
-                            previousReading) {
+                        int.parse(meterReadingController.text) >= prevReading) {
                       Map data = widget.rental!.getMap();
+
                       Map<String, dynamic> temp = {
                         'billDate': DateTime.now(),
                         'meterReading': int.parse(meterReadingController.text),
                         'electricityCharges':
                             (int.parse(meterReadingController.text) -
-                                    widget.rental!.meterReading) *
+                                    prevReading) *
                                 7,
                         'total': getTotal(
                           int.parse(meterReadingController.text),
                         ),
                       };
+
                       data.addAll(temp);
-                      print(data);
+
                       Bill bill = Bill.getbill(data);
                       bool result = await firestoreHelper.generateBill(bill);
+
                       Rental rental = widget.rental!;
                       rental.meterReading =
                           int.parse(meterReadingController.text);
+
                       bool res = await firestoreHelper.updateRental(rental);
                       Navigator.pop(context);
                       if (result && res) {

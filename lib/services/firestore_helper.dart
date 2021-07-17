@@ -73,14 +73,12 @@ class FirestoreHelper {
   Future<bool> generateBill(Bill bill) async {
     DateTime now = DateTime.now();
     DateTime firstOfMonth = DateTime(now.year, now.month, 1);
-    print(firstOfMonth);
 
+    // Current Month document
     QuerySnapshot document = await billsCollection
         .where('billDate', isGreaterThanOrEqualTo: firstOfMonth)
         .get();
-    print(document.docs);
 
-    //TODO: Check if bill already exists
     if (document.docs.isEmpty) {
       return rentalsCollection
           .doc(rentalDocId)
@@ -91,7 +89,6 @@ class FirestoreHelper {
         print(error);
       });
     } else {
-      print(document.docs[0].data());
       String docId = document.docs[0].id;
       return rentalsCollection
           .doc(rentalDocId)
@@ -103,5 +100,22 @@ class FirestoreHelper {
         print(error);
       });
     }
+  }
+
+  getPreviousReading() async {
+    DateTime now = DateTime.now();
+    DateTime currentMonth = DateTime(now.year, now.month, 1);
+    DateTime prevMonth = DateTime(now.year, now.month - 1, 1);
+
+    QuerySnapshot prevDocument = await billsCollection
+        .where('billDate', isLessThan: currentMonth)
+        .where('billDate', isGreaterThanOrEqualTo: prevMonth)
+        .get();
+
+    if (prevDocument.docs.isNotEmpty) {
+      var prevData = prevDocument.docs[0];
+      return prevData['meterReading'];
+    }
+    return null;
   }
 }
