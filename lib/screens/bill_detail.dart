@@ -4,6 +4,7 @@ import 'package:doorstep/utilities/constants.dart';
 import 'package:doorstep/widgets/customTF.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 class BillDetail extends StatefulWidget {
   final Bill bill;
@@ -78,6 +79,11 @@ class _BillDetailState extends State<BillDetail> {
           child: ListView(
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             children: [
+              Text(
+                DateFormat.yMMMMd().format(widget.bill.billDate),
+                style: TextStyle(color: kAccentColor, fontSize: 16),
+                textAlign: TextAlign.center,
+              ),
               CustomTextField(
                 controller: rentalNameController,
                 prefixIcon: Icon(
