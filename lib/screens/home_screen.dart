@@ -40,7 +40,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         body: StreamBuilder<QuerySnapshot<Rental>>(
-          stream: firestoreHelper.rentalsCollection.withConverter<Rental>(
+          stream: firestoreHelper.rentalsCollection
+              .orderBy('rentalName')
+              .withConverter<Rental>(
             toFirestore: (rental, SetOptions? options) {
               return rental.getMap();
             },
@@ -65,11 +67,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemCount: snapshotData.length,
                   itemBuilder: (context, index) {
                     Rental rental = snapshotData![index].data();
-                    // print(rental.getMap());
                     String rentalId = snapshotData[index].id;
 
                     return ListTile(
-                      tileColor: kAccentColor,
+                      tileColor: rental.tenantName == null
+                          ? kAccentColor.withOpacity(0.9)
+                          : kAccentColor,
                       leading: Icon(
                         Icons.house_siding_rounded,
                         color: kPrimaryColor,

@@ -117,7 +117,7 @@ class _BillDetailState extends State<BillDetail> {
               CustomTextField(
                 controller: meterReadingController,
                 prefix: SizedBox(
-                  width: 290,
+                  width: 220,
                   child: Text(
                     'Meter Reading: ',
                     style: TextStyle(
@@ -135,7 +135,7 @@ class _BillDetailState extends State<BillDetail> {
               CustomTextField(
                 controller: consumtionController,
                 prefix: SizedBox(
-                  width: 290,
+                  width: 220,
                   child: Text(
                     'Electricity Consumption: ',
                     style: TextStyle(
@@ -153,7 +153,7 @@ class _BillDetailState extends State<BillDetail> {
               CustomTextField(
                 controller: rentController,
                 prefix: SizedBox(
-                  width: 290,
+                  width: 220,
                   child: Text(
                     'Rent: ',
                     style: TextStyle(
@@ -168,7 +168,7 @@ class _BillDetailState extends State<BillDetail> {
               CustomTextField(
                 controller: electricityChargesController,
                 prefix: SizedBox(
-                  width: 290,
+                  width: 220,
                   child: Text(
                     'Electricity Charges: ',
                     style: TextStyle(
@@ -183,7 +183,7 @@ class _BillDetailState extends State<BillDetail> {
               CustomTextField(
                 controller: waterChargesController,
                 prefix: SizedBox(
-                  width: 290,
+                  width: 220,
                   child: Text(
                     'Water Charges: ',
                     style: TextStyle(
@@ -198,7 +198,7 @@ class _BillDetailState extends State<BillDetail> {
               CustomTextField(
                 controller: maintenanceController,
                 prefix: SizedBox(
-                  width: 290,
+                  width: 220,
                   child: Text(
                     'Maintenance: ',
                     style: TextStyle(
@@ -218,7 +218,7 @@ class _BillDetailState extends State<BillDetail> {
           child: CustomTextField(
             controller: totalController,
             prefix: SizedBox(
-              width: 290,
+              width: 220,
               child: Text(
                 'Total: ',
                 style:
