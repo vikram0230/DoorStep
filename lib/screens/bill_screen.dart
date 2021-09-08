@@ -70,7 +70,7 @@ class _BillScreenState extends State<BillScreen> {
             List<QueryDocumentSnapshot<Bill>>? snapshotData;
             if (snapshot.connectionState != ConnectionState.waiting) {
               if (snapshot.hasData) {
-                snapshotData = snapshot.data!.docs;
+                snapshotData = snapshot.data!.docs.reversed.toList();
                 return ListView.separated(
                   padding: EdgeInsets.all(10),
                   itemCount: snapshotData.length,
