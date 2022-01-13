@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:doorstep/screens/bill_screen.dart';
 import 'package:doorstep/screens/rental_detail.dart';
 import 'package:doorstep/services/firestore_helper.dart';
 import 'package:doorstep/utilities/classes.dart';
@@ -77,6 +78,22 @@ class _HomeScreenState extends State<HomeScreen> {
                         Icons.house_siding_rounded,
                         color: kPrimaryColor,
                         size: 40,
+                      ),
+                      trailing: IconButton(
+                        icon: Icon(
+                          Icons.receipt,
+                          color: kPrimaryColor,
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BillScreen(
+                                rentalId: rentalId,
+                              ),
+                            ),
+                          );
+                        },
                       ),
                       title: Text(
                         rental.rentalName,

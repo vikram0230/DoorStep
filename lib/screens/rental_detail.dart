@@ -266,76 +266,79 @@ class _RentalDetailState extends State<RentalDetail> {
               ],
             ),
           ),
-          bottomNavigationBar: Container(
-            child: MaterialButton(
-              onPressed: () async {
-                kLoadingDialog(context);
+          bottomNavigationBar: Visibility(
+            visible: editable,
+            child: Container(
+              child: MaterialButton(
+                onPressed: () async {
+                  kLoadingDialog(context);
 
-                Rental rental = Rental(
-                  rentalName: rentalNameController.text,
-                  rent: int.parse(rentController.text),
-                  meterReading: int.parse(meterReadingController.text),
-                  waterCharges: int.parse(waterChargesController.text),
-                  maintenance: int.parse(maintenanceController.text),
-                  tenantName: occupancy ? tenantNameController.text : null,
-                  advancePaid: occupancy
-                      ? int.tryParse(advancePaidController.text)
-                      : null,
-                );
+                  Rental rental = Rental(
+                    rentalName: rentalNameController.text,
+                    rent: int.parse(rentController.text),
+                    meterReading: int.parse(meterReadingController.text),
+                    waterCharges: int.parse(waterChargesController.text),
+                    maintenance: int.parse(maintenanceController.text),
+                    tenantName: occupancy ? tenantNameController.text : null,
+                    advancePaid: occupancy
+                        ? int.tryParse(advancePaidController.text)
+                        : null,
+                  );
 
-                if (widget.rental == null) {
-                  bool result = await firestoreHelper.addRental(rental);
+                  if (widget.rental == null) {
+                    bool result = await firestoreHelper.addRental(rental);
 
-                  Navigator.pop(context);
-                  if (result) {
-                    Fluttertoast.showToast(
-                      msg: 'Rental Created',
-                      backgroundColor: kAccentColor,
-                      textColor: kPrimaryColor,
-                      gravity: ToastGravity.BOTTOM,
-                    );
+                    Navigator.pop(context);
+                    if (result) {
+                      Fluttertoast.showToast(
+                        msg: 'Rental Created',
+                        backgroundColor: kAccentColor,
+                        textColor: kPrimaryColor,
+                        gravity: ToastGravity.BOTTOM,
+                      );
+                    } else {
+                      Fluttertoast.showToast(
+                        msg: 'Error! Rental not created',
+                        backgroundColor: kAccentColor,
+                        textColor: kPrimaryColor,
+                        gravity: ToastGravity.BOTTOM,
+                      );
+                    }
                   } else {
-                    Fluttertoast.showToast(
-                      msg: 'Error! Rental not created',
-                      backgroundColor: kAccentColor,
-                      textColor: kPrimaryColor,
-                      gravity: ToastGravity.BOTTOM,
-                    );
-                  }
-                } else {
-                  bool result = await firestoreHelper.updateRental(rental);
+                    bool result = await firestoreHelper.updateRental(rental);
 
-                  Navigator.pop(context);
-                  if (result) {
-                    Fluttertoast.showToast(
-                      msg: 'Rental Updated',
-                      backgroundColor: kAccentColor,
-                      textColor: kPrimaryColor,
-                      gravity: ToastGravity.BOTTOM,
-                    );
-                  } else {
-                    Fluttertoast.showToast(
-                      msg: 'Error! Rental not updated',
-                      backgroundColor: kAccentColor,
-                      textColor: kPrimaryColor,
-                      gravity: ToastGravity.BOTTOM,
-                    );
+                    Navigator.pop(context);
+                    if (result) {
+                      Fluttertoast.showToast(
+                        msg: 'Rental Updated',
+                        backgroundColor: kAccentColor,
+                        textColor: kPrimaryColor,
+                        gravity: ToastGravity.BOTTOM,
+                      );
+                    } else {
+                      Fluttertoast.showToast(
+                        msg: 'Error! Rental not updated',
+                        backgroundColor: kAccentColor,
+                        textColor: kPrimaryColor,
+                        gravity: ToastGravity.BOTTOM,
+                      );
+                    }
                   }
-                }
-                Navigator.pop(context);
-              },
-              child: Text(
-                'Save',
-                style: TextStyle(color: kPrimaryColor, fontSize: 18),
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Save',
+                  style: TextStyle(color: kPrimaryColor, fontSize: 18),
+                ),
+                color: kAccentColor,
+                elevation: 10,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
               ),
-              color: kAccentColor,
-              elevation: 10,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5),
-              ),
+              color: Colors.transparent,
+              margin: EdgeInsets.symmetric(vertical: 20, horizontal: 60),
             ),
-            color: Colors.transparent,
-            margin: EdgeInsets.symmetric(vertical: 20, horizontal: 60),
           ),
         ),
       ),

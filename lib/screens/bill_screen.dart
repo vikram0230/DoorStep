@@ -51,8 +51,9 @@ class _BillScreenState extends State<BillScreen> {
           ),
         ),
         body: StreamBuilder<QuerySnapshot<Bill>>(
-          stream: firestoreHelper.billsCollection.withConverter<Bill>(
+          stream: firestoreHelper.billsCollection.orderBy('billDate',descending: true).withConverter<Bill>(
             toFirestore: (bill, SetOptions? options) {
+              print(options);
               return bill.getMap();
             },
             fromFirestore: (
@@ -70,7 +71,7 @@ class _BillScreenState extends State<BillScreen> {
             List<QueryDocumentSnapshot<Bill>>? snapshotData;
             if (snapshot.connectionState != ConnectionState.waiting) {
               if (snapshot.hasData) {
-                snapshotData = snapshot.data!.docs.reversed.toList();
+                snapshotData = snapshot.data!.docs.toList();
                 return ListView.separated(
                   padding: EdgeInsets.all(10),
                   itemCount: snapshotData.length,
