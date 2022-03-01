@@ -4,7 +4,6 @@ import 'package:doorstep/utilities/classes.dart';
 import 'package:doorstep/utilities/constants.dart';
 import 'package:doorstep/widgets/customTF.dart';
 import 'package:doorstep/widgets/shared_dialogs.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -430,11 +429,11 @@ class _RentalDetailState extends State<RentalDetail> {
     );
   }
 
-  getTotal(int meterReading) {
+  getTotal(int electricityConsumption) {
     int total = widget.rental!.rent +
         widget.rental!.waterCharges +
         widget.rental!.maintenance +
-        (meterReading - widget.rental!.meterReading) * 7;
+        electricityConsumption * 7;
     return total;
   }
 
@@ -484,17 +483,15 @@ class _RentalDetailState extends State<RentalDetail> {
                         int.parse(readingController.text) >= prevReading) {
                       Map data = widget.rental!.getMap();
 
+                      int electricityConsumption =
+                          int.parse(readingController.text) - prevReading;
+
                       Map<String, dynamic> temp = {
                         'billDate': DateTime.now(),
                         'meterReading': int.parse(readingController.text),
-                        'electricityConsumption':
-                            int.parse(readingController.text) - prevReading,
-                        'electricityCharges':
-                            (int.parse(readingController.text) - prevReading) *
-                                7,
-                        'total': getTotal(
-                          int.parse(readingController.text),
-                        ),
+                        'electricityConsumption': electricityConsumption,
+                        'electricityCharges': electricityConsumption * 7,
+                        'total': getTotal(electricityConsumption),
                       };
 
                       data.addAll(temp);

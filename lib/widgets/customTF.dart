@@ -11,6 +11,7 @@ class CustomTextField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatter;
   final bool? enabled;
   final String? errorText;
+  final bool boldText;
 
   CustomTextField({
     this.labelText,
@@ -19,7 +20,9 @@ class CustomTextField extends StatelessWidget {
     this.inputFormatter,
     this.enabled,
     this.errorText,
-    this.prefix, this.suffix,
+    this.prefix,
+    this.suffix,
+    this.boldText = false,
   });
 
   @override
@@ -30,6 +33,9 @@ class CustomTextField extends StatelessWidget {
         controller: controller,
         enabled: enabled ?? true,
         cursorColor: kAccentColor,
+        style: boldText
+            ? TextStyle(fontWeight: FontWeight.bold, fontSize: 20)
+            : null,
         inputFormatters:
             inputFormatter ?? [FilteringTextInputFormatter.singleLineFormatter],
         decoration: InputDecoration(
