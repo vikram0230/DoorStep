@@ -12,6 +12,7 @@ class CustomTextField extends StatelessWidget {
   final bool? enabled;
   final String? errorText;
   final bool boldText;
+  final bool boldUnderLine;
 
   CustomTextField({
     this.labelText,
@@ -23,6 +24,7 @@ class CustomTextField extends StatelessWidget {
     this.prefix,
     this.suffix,
     this.boldText = false,
+    this.boldUnderLine = false,
   });
 
   @override
@@ -50,10 +52,16 @@ class CustomTextField extends StatelessWidget {
           // hintStyle: TextStyle(color: kAccentColor.withOpacity(0.3)),
           focusColor: kAccentColor,
           focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: kAccentColor),
+            borderSide: BorderSide(
+              color: kAccentColor,
+              width: boldUnderLine ? 5 : 1,
+            ),
           ),
           enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: kAccentColor),
+            borderSide: BorderSide(
+              color: kAccentColor,
+              width: boldUnderLine ? 5 : 1,
+            ),
           ),
           errorBorder: errorText == null
               ? UnderlineInputBorder(

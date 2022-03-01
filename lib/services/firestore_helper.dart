@@ -73,13 +73,14 @@ class FirestoreHelper {
   Future<bool> generateBill(Bill bill) async {
     DateTime now = DateTime.now();
     DateTime firstOfMonth = DateTime(now.year, now.month, 1);
+    DateTime nextMonth = DateTime(now.year, now.month + 1, 1);
 
-    // Current Month document
-    QuerySnapshot document = await billsCollection
+    QuerySnapshot currentMonthBill = await billsCollection
         .where('billDate', isGreaterThanOrEqualTo: firstOfMonth)
+        .where('billDate', isLessThan: nextMonth)
         .get();
 
-    if (document.docs.isEmpty) {
+    if (currentMonthBill.docs.isEmpty) {
       return rentalsCollection
           .doc(rentalDocId)
           .collection(kBills)
@@ -89,7 +90,7 @@ class FirestoreHelper {
         print(error);
       });
     } else {
-      String docId = document.docs[0].id;
+      String docId = currentMonthBill.docs[0].id;
       return rentalsCollection
           .doc(rentalDocId)
           .collection(kBills)
@@ -102,7 +103,7 @@ class FirestoreHelper {
     }
   }
 
-  getPreviousReading() async {
+  Future<int?> getPreviousReading() async {
     DateTime now = DateTime.now();
     DateTime currentMonth = DateTime(now.year, now.month, 1);
     DateTime prevMonth = DateTime(now.year, now.month - 1, 1);
@@ -117,5 +118,18 @@ class FirestoreHelper {
       return prevData['meterReading'];
     }
     return null;
+  }
+
+  Future<bool> generatedCurrentMonthBill() async {
+    DateTime now = DateTime.now();
+    DateTime firstOfMonth = DateTime(now.year, now.month, 1);
+    DateTime nextMonth = DateTime(now.year, now.month + 1, 1);
+
+    QuerySnapshot currentMonthBill = await billsCollection
+        .where('billDate', isGreaterThanOrEqualTo: firstOfMonth)
+        .where('billDate', isLessThan: nextMonth)
+        .get();
+
+    return currentMonthBill.docs.isNotEmpty;
   }
 }

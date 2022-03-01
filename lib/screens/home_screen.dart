@@ -15,7 +15,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  FirestoreHelper firestoreHelper = FirestoreHelper();
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         body: StreamBuilder<QuerySnapshot<Rental>>(
-          stream: firestoreHelper.rentalsCollection
+          stream: FirestoreHelper().rentalsCollection
               .orderBy('rentalName')
               .withConverter<Rental>(
             toFirestore: (rental, SetOptions? options) {
@@ -70,6 +69,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     Rental rental = snapshotData![index].data();
                     String rentalId = snapshotData[index].id;
 
+                    // FirestoreHelper firestoreHelper = FirestoreHelper(rentalId: rentalId);
+
+                    // bool generatedCurrentMonthBill =
+                    //     await firestoreHelper.generatedCurrentMonthBill();
+
                     return ListTile(
                       tileColor: rental.tenantName == null
                           ? kAccentColor.withOpacity(0.9)
@@ -81,9 +85,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       trailing: IconButton(
                         icon: Icon(
-                          Icons.receipt,
-                          color: kPrimaryColor,
-                        ),
+                                Icons.receipt,
+                                color: kPrimaryColor,
+                              ),
                         onPressed: () {
                           Navigator.push(
                             context,

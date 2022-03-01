@@ -179,6 +179,7 @@ class _BillDetailState extends State<BillDetail> {
                   inputFormatter: [
                     FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
                   ],
+                  boldUnderLine: true,
                 ),
                 CustomTextField(
                   controller: rentController,
@@ -239,6 +240,7 @@ class _BillDetailState extends State<BillDetail> {
                   inputFormatter: [
                     FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
                   ],
+                  boldUnderLine: true,
                 ),
                 CustomTextField(
                   controller: totalController,
@@ -257,6 +259,7 @@ class _BillDetailState extends State<BillDetail> {
                   inputFormatter: [
                     FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
                   ],
+                  boldUnderLine: true,
                 ),
               ],
             ),

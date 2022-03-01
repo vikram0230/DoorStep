@@ -1,4 +1,6 @@
 class Rental {
+  /// Stores basic data of a rental
+
   late String rentalName;
   late int rent;
   late int meterReading;
@@ -30,6 +32,8 @@ class Rental {
   }
 
   static getRental(Map data) {
+    /// Converts dataMap into Rental
+
     return Rental(
       rentalName: data['rentalName'],
       rent: data['rent'],
