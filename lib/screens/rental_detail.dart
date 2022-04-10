@@ -344,6 +344,7 @@ class _RentalDetailState extends State<RentalDetail> {
     );
   }
 
+  /// Gets the confirmation from the user to delete the rental
   Future<dynamic> deleteRental(BuildContext context) {
     bool error = false;
     return showDialog(
@@ -429,6 +430,80 @@ class _RentalDetailState extends State<RentalDetail> {
     );
   }
 
+  /// Gets the confirmation from the user to update current month bill
+  Future<bool> confirmUpdate(BuildContext context, String docId, Bill bill) {
+    bool res = false;
+    bool error = false;
+    return showDialog(
+      context: context,
+      builder: (context) {
+        TextEditingController confirmController = TextEditingController();
+        return StatefulBuilder(
+          builder:
+              (BuildContext context, void Function(void Function()) setState) {
+            return AlertDialog(
+              backgroundColor: kPrimaryColor,
+              title: Text('Update Rental'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Enter \'Yes\' to confirm',
+                    style: TextStyle(color: kAccentColor, fontSize: 16),
+                  ),
+                  CustomTextField(
+                    labelText: 'Confirm',
+                    controller: confirmController,
+                    errorText: error ? 'Enter Yes' : null,
+                  ),
+                ],
+              ),
+              contentPadding: EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 10.0),
+              actions: [
+                MaterialButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Cancel'),
+                ),
+                MaterialButton(
+                  onPressed: () async {
+                    if (confirmController.text == 'Yes') {
+                      res = await firestoreHelper.updateBill(docId, bill);
+                      if (res) {
+                        Fluttertoast.showToast(
+                          msg: 'Bill Updated',
+                          backgroundColor: kAccentColor,
+                          textColor: kPrimaryColor,
+                          gravity: ToastGravity.BOTTOM,
+                        );
+                      } else {
+                        Fluttertoast.showToast(
+                          msg: 'Error! Bill not updated',
+                          backgroundColor: kAccentColor,
+                          textColor: kPrimaryColor,
+                          gravity: ToastGravity.BOTTOM,
+                        );
+                      }
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    } else {
+                      setState(() {
+                        error = true;
+                      });
+                    }
+                  },
+                  child: Text('Confirm'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    ).then((value) => res);
+  }
+
   getTotal(int electricityConsumption) {
     int total = widget.rental!.rent +
         widget.rental!.waterCharges +
@@ -497,7 +572,15 @@ class _RentalDetailState extends State<RentalDetail> {
                       data.addAll(temp);
 
                       Bill bill = Bill.getbill(data);
-                      bool result = await firestoreHelper.generateBill(bill);
+
+                      String? docId = await firestoreHelper.checkCurrentBill();
+                      bool result = false;
+
+                      if (docId != null) {
+                        result = await confirmUpdate(context, docId, bill);
+                      } else {
+                        result = await firestoreHelper.createBill(bill);
+                      }
 
                       Rental rental = widget.rental!;
                       rental.meterReading = int.parse(readingController.text);

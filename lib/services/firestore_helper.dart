@@ -70,7 +70,35 @@ class FirestoreHelper {
 
   // Bill Related
 
-  Future<bool> generateBill(Bill bill) async {
+  /// Creates a monthly bill
+  Future<bool> createBill(Bill bill) async {
+    return rentalsCollection
+          .doc(rentalDocId)
+          .collection(kBills)
+          .add(bill.getMap())
+          .then((value) => true)
+          .catchError((error) {
+        print(error);
+      });
+  }
+
+  /// Updates an existing bill
+  Future<bool> updateBill(String docId, Bill bill) {
+    return rentalsCollection
+          .doc(rentalDocId)
+          .collection(kBills)
+          .doc(docId)
+          .update(bill.getMap())
+          .then((value) => true)
+          .catchError((error) {
+        print(error);
+      });
+  }
+
+  /// Checks if current month bill already exists
+  /// 
+  /// Return : docId of the bill
+  Future<String?> checkCurrentBill() async {
     DateTime now = DateTime.now();
     DateTime firstOfMonth = DateTime(now.year, now.month, 1);
     DateTime nextMonth = DateTime(now.year, now.month + 1, 1);
@@ -80,27 +108,8 @@ class FirestoreHelper {
         .where('billDate', isLessThan: nextMonth)
         .get();
 
-    if (currentMonthBill.docs.isEmpty) {
-      return rentalsCollection
-          .doc(rentalDocId)
-          .collection(kBills)
-          .add(bill.getMap())
-          .then((value) => true)
-          .catchError((error) {
-        print(error);
-      });
-    } else {
-      String docId = currentMonthBill.docs[0].id;
-      return rentalsCollection
-          .doc(rentalDocId)
-          .collection(kBills)
-          .doc(docId)
-          .update(bill.getMap())
-          .then((value) => true)
-          .catchError((error) {
-        print(error);
-      });
-    }
+    if (currentMonthBill.docs.isEmpty) return null;
+    return currentMonthBill.docs[0].id;
   }
 
   Future<int?> getPreviousReading() async {
