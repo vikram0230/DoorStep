@@ -479,6 +479,7 @@ class _RentalDetailState extends State<RentalDetail> {
                           gravity: ToastGravity.BOTTOM,
                         );
                       } else {
+                        res = false;
                         Fluttertoast.showToast(
                           msg: 'Error! Bill not updated',
                           backgroundColor: kAccentColor,
@@ -574,22 +575,30 @@ class _RentalDetailState extends State<RentalDetail> {
                       Bill bill = Bill.getbill(data);
 
                       String? docId = await firestoreHelper.checkCurrentBill();
-                      bool result = false;
+                      bool billUpdateResult = false;
 
                       if (docId != null) {
-                        result = await confirmUpdate(context, docId, bill);
+                        billUpdateResult =
+                            await confirmUpdate(context, docId, bill);
                       } else {
-                        result = await firestoreHelper.createBill(bill);
+                        billUpdateResult =
+                            await firestoreHelper.createBill(bill);
                       }
 
                       Rental rental = widget.rental!;
-                      rental.meterReading = int.parse(readingController.text);
-                      meterReadingController.text = readingController.text;
 
-                      bool res = await firestoreHelper.updateRental(rental);
+                      bool rentalUpdateResult = false;
+
+                      if (billUpdateResult) {
+                        rental.meterReading = int.parse(readingController.text);
+                        meterReadingController.text = readingController.text;
+                        rentalUpdateResult =
+                            await firestoreHelper.updateRental(rental);
+                      }
                       Navigator.pop(context);
+
                       setState(() {});
-                      if (result && res) {
+                      if (billUpdateResult && rentalUpdateResult) {
                         Fluttertoast.showToast(
                           msg: 'Bill Generated',
                           backgroundColor: kAccentColor,

@@ -97,7 +97,7 @@ class FirestoreHelper {
 
   /// Checks if current month bill already exists
   /// 
-  /// Return : docId of the bill
+  /// Return : [String] docId of the bill
   Future<String?> checkCurrentBill() async {
     DateTime now = DateTime.now();
     DateTime firstOfMonth = DateTime(now.year, now.month, 1);
@@ -129,6 +129,9 @@ class FirestoreHelper {
     return null;
   }
 
+  /// Checks if current month bill is generated
+  /// 
+  /// Returns: [bool] 
   Future<bool> generatedCurrentMonthBill() async {
     DateTime now = DateTime.now();
     DateTime firstOfMonth = DateTime(now.year, now.month, 1);
