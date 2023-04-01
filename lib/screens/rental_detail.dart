@@ -566,7 +566,7 @@ class _RentalDetailState extends State<RentalDetail> {
                         'billDate': DateTime.now(),
                         'meterReading': int.parse(readingController.text),
                         'electricityConsumption': electricityConsumption,
-                        'electricityCharges': electricityConsumption * 7,
+                        'electricityCharges': electricityConsumption * 8,
                         'total': getTotal(electricityConsumption),
                       };
 

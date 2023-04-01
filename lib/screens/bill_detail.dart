@@ -132,18 +132,18 @@ class _BillDetailState extends State<BillDetail> {
                   labelText: 'Tenant Name',
                   enabled: false,
                 ),
-                CustomTextField(
-                  controller: advancePaidController,
-                  prefixIcon: Icon(
-                    Icons.money_rounded,
-                    color: kAccentColor,
-                  ),
-                  labelText: 'Advance Paid',
-                  enabled: false,
-                  inputFormatter: [
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
-                  ],
-                ),
+                // CustomTextField(
+                //   controller: advancePaidController,
+                //   prefixIcon: Icon(
+                //     Icons.money_rounded,
+                //     color: kAccentColor,
+                //   ),
+                //   labelText: 'Advance Paid',
+                //   enabled: false,
+                //   inputFormatter: [
+                //     FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
+                //   ],
+                // ),
                 CustomTextField(
                   controller: meterReadingController,
                   prefix: SizedBox(
